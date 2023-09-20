@@ -119,9 +119,10 @@ class ChatChain:
         Args:
             phase_item: single phase configuration in the ChatChainConfig.json
 
-        Returns:
+        Returns: 
 
         """
+        print('model type', self.model_type)
 
         phase = phase_item['phase']
         phase_type = phase_item['phaseType']

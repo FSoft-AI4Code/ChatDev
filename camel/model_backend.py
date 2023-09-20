@@ -13,7 +13,7 @@
 # =========== Copyright 2023 @ CAMEL-AI.org. All Rights Reserved. ===========
 from abc import ABC, abstractmethod
 from typing import Any, Dict
-
+import os
 import openai
 import tiktoken
 
@@ -47,6 +47,17 @@ class OpenAIModel(ModelBackend):
         self.model_type = model_type
         self.model_config_dict = model_config_dict
 
+        if self.model_type == ModelType.GPT_3_5_CODE_VISTA:
+            RESOURCE_ENDPOINT = os.environ['RESOURCE_ENDPOINT']
+            API_TYPE = os.environ['API_TYPE']
+            API_VERSION = os.environ['API_VERSION']
+            API_KEY = os.environ['API_KEY']
+            openai.api_key = API_KEY
+            openai.api_type = API_TYPE
+            openai.api_base = RESOURCE_ENDPOINT
+            openai.api_version = API_VERSION
+            
+
     def run(self, *args, **kwargs) -> Dict[str, Any]:
         string = "\n".join([message["content"] for message in kwargs["messages"]])
         encoding = tiktoken.encoding_for_model(self.model_type.value)
@@ -66,8 +77,12 @@ class OpenAIModel(ModelBackend):
         num_max_token = num_max_token_map[self.model_type.value]
         num_max_completion_tokens = num_max_token - num_prompt_tokens
         self.model_config_dict['max_tokens'] = num_max_completion_tokens
+        if self.model_type == ModelType.GPT_3_5_CODE_VISTA:
+            kwargs['engine'] = os.environ['API_ENGINE']
+        else:
+            raise NotImplementedError
+            kwargs['model'] = self.model_type.value
         response = openai.ChatCompletion.create(*args, **kwargs,
-                                                model=self.model_type.value,
                                                 **self.model_config_dict)
 
         log_and_print_online(
@@ -110,7 +125,7 @@ class ModelFactory:
         default_model_type = ModelType.GPT_3_5_TURBO
 
         if model_type in {
-            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
+            ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k, ModelType.GPT_3_5_CODE_VISTA,
             None
         }:
             model_class = OpenAIModel

@@ -59,7 +59,7 @@ class Phase(ABC):
             task_type=TaskType.CHATDEV,
             need_reflect=False,
             with_task_specify=False,
-            model_type=ModelType.GPT_3_5_TURBO,
+            model_type=ModelType.GPT_3_5_CODE_VISTA,
             placeholders=None,
             chat_turn_limit=10
     ) -> str:

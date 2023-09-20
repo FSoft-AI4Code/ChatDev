@@ -55,7 +55,8 @@ To get started, follow these steps:
    cd ChatDev
    pip3 install -r requirements.txt
    ```
-4. **Set OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
+4. There are two options: using directly OpenAI APIs or Azure APIs.
+ * **OpenAI API Key:** Export your OpenAI API key as an environment variable. Replace `"your_OpenAI_API_key"` with
    your actual API key. Remember that this environment variable is session-specific, so you need to set it again if you
    open a new terminal session.
    On Unix/Linux:
@@ -66,6 +67,12 @@ To get started, follow these steps:
    ```
    $env:OPENAI_API_KEY="your_OpenAI_API_key"
    ```
+  * **Azure API:** Set the following environment variables. 
+    * API_KEY
+    * RESOURCE_ENDPOINT
+    * API_TYPE
+    * API_VERSION
+    * API_ENGINE
 5. **Build Your Software:** Use the following command to initiate the building of your software,
    replacing `[description_of_your_idea]` with your idea's description and `[project_name]` with your desired project
    name:

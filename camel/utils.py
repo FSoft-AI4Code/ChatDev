@@ -84,7 +84,7 @@ def num_tokens_from_messages(
 
     if model in {
         ModelType.GPT_3_5_TURBO, ModelType.GPT_4, ModelType.GPT_4_32k,
-        ModelType.STUB
+        ModelType.STUB, ModelType.GPT_3_5_CODE_VISTA
     }:
         return count_tokens_openai_chat_models(messages, encoding)
     else:
@@ -109,6 +109,8 @@ def get_model_token_limit(model: ModelType) -> int:
     """
     if model == ModelType.GPT_3_5_TURBO:
         return 16384
+    elif model == ModelType.GPT_3_5_CODE_VISTA:
+        return 4096
     elif model == ModelType.GPT_4:
         return 8192
     elif model == ModelType.GPT_4_32k:
@@ -141,7 +143,7 @@ def openai_api_key_required(func: F) -> F:
             raise ValueError("Expected ChatAgent")
         if self.model == ModelType.STUB:
             return func(self, *args, **kwargs)
-        elif 'OPENAI_API_KEY' in os.environ:
+        elif 'OPENAI_API_KEY' in os.environ or 'API_KEY' in os.environ:
             return func(self, *args, **kwargs)
         else:
             raise ValueError('OpenAI API key not found.')
